@@ -1,49 +1,50 @@
-name: Terraform Plan
+name: 'Terraform Plan'
 
 on:
   push:
     branches:
-      - 'feature/**'
+      - main
+    paths:
+      - 'APB-terraform_vm/Environments/dev/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'APB-terraform_vm/Environments/dev/**'
+  workflow_dispatch:
 
-permissions:
-  id-token: write
-  contents: read
+env:
+  ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+  ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+  ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+  ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
 
 jobs:
   terraform-plan:
-
+    name: 'Terraform Plan'
     runs-on: ubuntu-latest
-
     defaults:
       run:
-        working-directory: Environments/dev
+        working-directory: APB-terraform_vm/Environments/dev
 
     steps:
-
-      # Checkout repository
-      - name: Checkout Code
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      # Azure Login using OIDC
-      - name: Azure Login
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-      # Setup Terraform
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.9.0
 
-      # Terraform Init
       - name: Terraform Init
         run: terraform init
 
-      # Terraform Validate
+      - name: Terraform Format Check
+        run: terraform fmt -check
+        continue-on-error: true
+
       - name: Terraform Validate
         run: terraform validate
 
-      # Terraform Plan
       - name: Terraform Plan
         run: terraform plan -var-file="terraform.tfvars"
