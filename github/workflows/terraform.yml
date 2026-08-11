@@ -3,7 +3,7 @@ name: Terraform Plan
 on:
   push:
     branches:
-      - 'feature/**'
+      - 'feature/landingzone'
 
 permissions:
   id-token: write
