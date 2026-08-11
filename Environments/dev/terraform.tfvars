@@ -13,6 +13,10 @@ rg3 = {
        name     = "dev-rg3"
        location = "East US" 
     }
+    rg3 = {
+       name     = "dev-rg3"
+       location = "East US" 
+    }
 }
 
 vnets = {
