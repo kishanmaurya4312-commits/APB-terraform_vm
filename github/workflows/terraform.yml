@@ -3,6 +3,7 @@ name: 'Terraform Plan'
 on:
   push:
     branches:
+
       - main
     paths:
       - 'APB-terraform_vm/Environments/dev/**'
@@ -12,6 +13,8 @@ on:
     paths:
       - 'APB-terraform_vm/Environments/dev/**'
   workflow_dispatch:
+
+    
 
 env:
   ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
